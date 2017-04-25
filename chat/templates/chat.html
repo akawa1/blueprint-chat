@@ -1,0 +1,49 @@
+<html>
+ <head>
+   <title>Chat</title>
+   <style>
+     input { display: block; }
+     ul    { list-style: none; }
+   </style>
+ </head>
+ <body>
+   <ul id="messages"></ul>
+   <form id="chatbox">
+     <textarea></textarea>
+     <input type="submit" value="Send" />
+   </form> 
+ </body>
+</html>
+
+<script src="https://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script>
+ $(function(){
+   var socket = null;
+   var msgBox = $("#chatbox textarea");
+   var messages = $("#messages");
+   $("#chatbox").submit(function(){
+     if (!msgBox.val()) return false;
+     if (!socket) {
+       alert("Error: There is no socket connection.");
+       return false;
+     }
+     socket.send(msgBox.val());
+     msgBox.val("");
+     return false;
+   });
+   // 检查是否支持WebSocket
+   if (!window["WebSocket"]) {
+     alert("Error: Your browser does not support web  sockets.")
+   } else {
+     // 新建WebSocket连接
+     socket = new WebSocket("ws://{{.Host}}/room");
+     // 注册响应函数
+     socket.onclose = function() {
+       alert("Connection has been closed.");
+     }
+     socket.onmessage = function(e) {
+       messages.append($("<li>").text(e.data));
+     }
+   }
+ });
+</script>
