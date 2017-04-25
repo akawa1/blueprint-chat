@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/superleman/Blueprint/trace"
+	"github.com/superleman/blueprint-chat/trace"
 )
 
 const (
